@@ -64,60 +64,6 @@
       "location": "Shavasana Yoga School",
       "startTime": "2023-03-09T06:00:00.000Z",
       "endTime": "2023-03-09T07:00:00.000Z"
-    },
-    {
-      "id": "100",
-      "title": "bla",
-      "description": "",
-      "image": "",
-      "location": "",
-      "startTime": "",
-      "endTime": ""
-    },
-    {
-      "id": 100,
-      "title": "nieuw",
-      "description": "",
-      "image": "",
-      "location": "",
-      "startTime": "",
-      "endTime": ""
-    },
-    {
-      "id": 100,
-      "title": "nieuw",
-      "description": "nieuw",
-      "image": "",
-      "location": "",
-      "startTime": "",
-      "endTime": ""
-    },
-    {
-      "id": 100,
-      "title": "nieuw",
-      "description": "nieuw",
-      "image": "",
-      "location": "nieuw",
-      "startTime": "",
-      "endTime": ""
-    },
-    {
-      "id": 100,
-      "title": "nieuw",
-      "description": "nieuw",
-      "image": "https://ymcasouthflorida.org/wp-content/uploads/2019/12/AA2I8910-scaled.jpg",
-      "location": "nieuw",
-      "startTime": "",
-      "endTime": ""
-    },
-    {
-      "id": 100,
-      "title": "nieuw",
-      "description": "nieuw",
-      "image": "https://ymcasouthflorida.org/wp-content/uploads/2019/12/AA2I8910-scaled.jpg",
-      "location": "nieuw",
-      "startTime": "01:31",
-      "endTime": "17:31"
     }
   ],
   "categories": [

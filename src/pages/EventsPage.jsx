@@ -34,13 +34,14 @@ export const EventsPage = () => {
       body: JSON.stringify(event),
       headers: { "Content-Type": "application/json;charset=utf-8" },
     });
-    event.id = (await response.json()).id;
+    return response;
   };
 
   const filterCategories = (event) => {
     if (!sportsChoice && !gamesChoice && !relaxationChoice) {
       return true;
     }
+    console.log(event);
     if (
       (sportsChoice && event.categoryIds.includes(1)) ||
       (gamesChoice && event.categoryIds.includes(2)) ||
