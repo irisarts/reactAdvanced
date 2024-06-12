@@ -1,5 +1,16 @@
 import React, { useState } from "react";
-import { Box, Button, Heading, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Heading,
+  Image,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+} from "@chakra-ui/react";
 import { useLoaderData } from "react-router-dom";
 import { FormatDateTime } from "../components/FormatDateTime";
 import { EditEventForm } from "../components/EditEventForm";
@@ -21,34 +32,50 @@ export const EventPage = () => {
   const { event, categories, users } = useLoaderData();
   const creator = users.find((user) => user.id === event.createdBy);
   const [isEditing, setIsEditing] = useState(false);
-  const [ deleteModalOpen, setDeleteModalOpen ] = useState(false);
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-  const handleCancelEdit = () => {
-    setIsEditing(false);
-  };
-  const handleDelete = () => {
-    setDeleteModalOpen(true);
-  };
-  const confirmDelete = async () => {
-    try {
-    await fetch(`http://localhost:3000/events/${event.id}`, {method: "DELETE"});
-    setDeleteModalOpen(false);
-  } catch (error){
-    console.error("Failed to delete event ", error);
-  }
-};
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  const onSave = async (formData) => {
+  const onDelete = async (eventId) => {
+    console.log("Deleting event with id:", eventId); 
     try {
-      console.log("Event saved: ", formData);
+      const response = await fetch(`http://localhost:3000/events/${eventId}`, { method: "DELETE" });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      console.log("Event deleted successfully");
+      setDeleteModalOpen(false);
+      window.location.href = '/';
     } catch (error) {
-      console.error("Failed to save event: ", error);
+      console.error("Failed to delete event:", error);
     }
   };
 
-  
+  const onSave = async (formData) => {
+    console.log("Saving event with data:", formData); 
+    try {
+      const response = await fetch(`http://localhost:3000/events/${event.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      console.log("Event saved successfully");
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Failed to save event:", error);
+    }
+  };
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+  };
 
   return (
     <>
@@ -93,14 +120,14 @@ export const EventPage = () => {
           <ModalHeader>Edit Event</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-          <EditEventForm event={event} onSave={onSave} onDelete={handleDelete} onCancel={handleCancelEdit} />
+            <EditEventForm event={event} onSave={onSave} onCancel={handleCancelEdit} onDelete={onDelete} /> 
           </ModalBody>
         </ModalContent>
       </Modal>
       <ConfirmDeleteModal
         isOpen={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
-        onDelete={confirmDelete}
+        onConfirm={() => onDelete(event.id)}
       />
     </>
   );

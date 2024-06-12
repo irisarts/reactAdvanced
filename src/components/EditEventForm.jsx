@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FormControl, FormLabel, Input, Button, Stack, useToast } from "@chakra-ui/react";
+import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
 import { FormatDateTime } from "./FormatDateTime";
 
 export const EditEventForm = ({ event, onSave, onCancel, onDelete }) => {
@@ -10,9 +11,9 @@ export const EditEventForm = ({ event, onSave, onCancel, onDelete }) => {
     startTime: event.startTime,
     endTime: event.endTime,
   });
-
+  const [isModalOpen, setModalOpen] = useState(false); 
   const toast = useToast();
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -44,68 +45,72 @@ export const EditEventForm = ({ event, onSave, onCancel, onDelete }) => {
   };
 
   const handleDelete = async () => {
+    console.log("handleDelete called");
     try {
       await onDelete(event.id);
-      window.location.href = '/';
     } catch (error) {
       console.error("Failed to delete event: ", error);
     }
   };
-  
-  
+
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false); 
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Stack spacing={4}>
-        <FormControl>
-          <FormLabel>Title</FormLabel>
-          <Input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-          />
-        </FormControl>
-        <FormControl>
-          <FormLabel>Description</FormLabel>
-          <Input
-            type="text"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-          />
-        </FormControl>
-        <FormControl>
-          <FormLabel>Image</FormLabel>
-          <Input
-            type="url"
-            name="image"
-            value={formData.image}
-            onChange={handleChange}
-          />
-        </FormControl>
-        <FormControl>
-          <FormLabel>Start Time</FormLabel>
-          <Input
-            type="datetime-local"
-            name="startTime"
-            value={FormatDateTime(formData.startTime, "datetime-local")}
-            onChange={handleChange}
-          />
-        </FormControl>
-        <FormControl>
-          <FormLabel>End Time</FormLabel>
-          <Input
-            type="datetime-local"
-            name="endTime"
-            value={FormatDateTime(formData.endTime, "datetime-local")}
-            onChange={handleChange}
-          />
-        </FormControl>
-        <Button colorScheme="green" type="submit">Save event</Button>
-        <Button onClick={handleDelete} colorScheme="red">Delete event</Button>
-        <Button onClick={onCancel}>Cancel</Button>
-      </Stack>
-    </form>
+    <>
+      <form onSubmit={handleSubmit}>
+        <Stack spacing={4}>
+          <FormControl>
+            <FormLabel>Title</FormLabel>
+            <Input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Description</FormLabel>
+            <Input
+              type="text"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Image</FormLabel>
+            <Input
+              type="url"
+              name="image"
+              value={formData.image}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Start Time</FormLabel>
+            <Input
+              type="datetime-local"
+              name="startTime"
+              value={FormatDateTime(formData.startTime, "datetime-local")}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>End Time</FormLabel>
+            <Input
+              type="datetime-local"
+              name="endTime"
+              value={FormatDateTime(formData.endTime, "datetime-local")}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <Button colorScheme="green" type="submit">Save event</Button>
+          <Button onClick={openModal} colorScheme="red">Delete event</Button>
+          <Button onClick={onCancel}>Cancel</Button>
+        </Stack>
+      </form>
+      <ConfirmDeleteModal isOpen={isModalOpen} onClose={closeModal} confirmDelete={handleDelete} /> {/* Ensure confirmDelete points to handleDelete */}
+    </>
   );
 };

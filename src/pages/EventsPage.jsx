@@ -21,13 +21,15 @@ export const EventsPage = () => {
   const { events, categories } = useLoaderData();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [searchWord, setSearchWord] = useState("");
-  const handleChange = (event) => setSearchWord(event.target.value);
   const [sportsChoice, setSportsChoice] = useState(false);
-  const handleSportsCheck = () => setSportsChoice(!sportsChoice);
   const [gamesChoice, setGamesChoice] = useState(false);
-  const handleGamesCheck = () => setGamesChoice(!gamesChoice);
   const [relaxationChoice, setRelaxationChoice] = useState(false);
+
+  const handleChange = (event) => setSearchWord(event.target.value);
+  const handleSportsCheck = () => setSportsChoice(!sportsChoice);
+  const handleGamesCheck = () => setGamesChoice(!gamesChoice);
   const handleRelaxationCheck = () => setRelaxationChoice(!relaxationChoice);
+  
   const createEvent = async (event) => {
     const response = await fetch("http://localhost:3000/events", {
       method: "POST",
@@ -38,25 +40,17 @@ export const EventsPage = () => {
   };
 
   const filterCategories = (event) => {
-    if (!sportsChoice && !gamesChoice && !relaxationChoice) {
-      return true;
-    }
-    console.log(event);
-    if (
+    const matchesSearchWord = 
+      (event.title && event.title.toLowerCase().includes(searchWord.toLowerCase())) ||
+      (event.location && event.location.toLowerCase().includes(searchWord.toLowerCase()));
+  
+    const matchesCategories =
+      (!sportsChoice && !gamesChoice && !relaxationChoice) ||
       (sportsChoice && event.categoryIds.includes(1)) ||
       (gamesChoice && event.categoryIds.includes(2)) ||
-      (relaxationChoice && event.categoryIds.includes(3))
-    ) {
-      return true;
-    }
-    if (
-      event.title.toLowerCase().includes(searchWord.toLowerCase()) ||
-      event.location.toLowerCase().includes(searchWord.toLowerCase())
-    ) {
-      return true;
-    }
-
-    return false;
+      (relaxationChoice && event.categoryIds.includes(3));
+  
+    return matchesSearchWord && matchesCategories;
   };
 
   return (
